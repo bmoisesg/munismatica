@@ -60,7 +60,7 @@ class _HomeState extends State<Home> {
               Expanded(
                 child: CustomButton(
                   title: 'Monedas',
-                  icon: Icon(Icons.monetization_on),
+                  icon: const Icon(Icons.monetization_on),
                   fnt: () {
                     Navigator.push(
                       context,
@@ -73,7 +73,7 @@ class _HomeState extends State<Home> {
               Expanded(
                 child: CustomButton(
                   title: 'Billetes',
-                  icon: Icon(Icons.payments),
+                  icon: const Icon(Icons.payments),
                   fnt: () {
                     Navigator.push(
                       context,

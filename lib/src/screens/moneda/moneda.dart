@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:mi_primera_numismatica/src/components/button.dart';
 import 'package:mi_primera_numismatica/src/screens/moneda/lista.dart';
@@ -10,20 +11,85 @@ class PageMoneda extends StatefulWidget {
 }
 
 class _PageMonedaState extends State<PageMoneda> {
-  Future<List> getData() async {
-    return [
-      "Q 0.25",
-      "Q 0.50",
-      "Q 1.00",
-    ];
+  Future<dynamic> getData() async {
+    List listaEcuestas = [];
+    DatabaseReference ref = FirebaseDatabase.instance.ref();
+    DataSnapshot snapshot = await ref.child('categorias/').get();
+    if (snapshot.exists) {
+      if (snapshot.value != null && snapshot.value is Map<dynamic, dynamic>) {
+        Map<dynamic, dynamic> dataMap = snapshot.value as Map;
+        dataMap.forEach((key, value) {
+          listaEcuestas.add({"id": key, "categoria": value['moneda_categoria']});
+        });
+        return listaEcuestas;
+      }
+    }
+    return [];
   }
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController _ctrl = TextEditingController();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Monedas'),
         elevation: 30,
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () async {
+          showDialog(
+            //barrierDismissible: false,
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text("Agregar categoria"),
+                actions: [
+                  TextButton(
+                    onPressed: () async {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Cancelar'),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      try {
+                        if (_ctrl.text == "") return;
+                        DatabaseReference ref = FirebaseDatabase.instance.ref();
+                        var data = {
+                          "moneda_categoria": _ctrl.text,
+                        };
+                        await ref.child('categorias').push().set(data);
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Categoria agregada!')));
+                        setState(() {});
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error para agregar categoria')));
+                      }
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextFormField(
+                      keyboardType: TextInputType.text,
+                      controller: _ctrl,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "Nombre",
+                        fillColor: Colors.transparent,
+                        filled: true,
+                        isDense: true,
+                      ),
+                    )
+                  ],
+                ),
+              );
+            },
+          );
+        },
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -33,7 +99,7 @@ class _PageMonedaState extends State<PageMoneda> {
             const Text('Categorias'),
             const SizedBox(height: 10),
             Expanded(
-              child: FutureBuilder<List>(
+              child: FutureBuilder<dynamic>(
                 future: getData(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -48,11 +114,11 @@ class _PageMonedaState extends State<PageMoneda> {
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
                         return CustomButton(
-                          title: snapshot.data![index],
+                          title: snapshot.data![index]['categoria'] ?? "--",
                           fnt: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => PageMonedaLista(valor: snapshot.data![index])),
+                              MaterialPageRoute(builder: (context) => PageMonedaLista(valor: snapshot.data![index]['categoria']!)),
                             );
                           },
                         );

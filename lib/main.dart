@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mi_primera_numismatica/src/screens/home.dart';
+import 'package:firebase_core/firebase_core.dart' show Firebase;
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 

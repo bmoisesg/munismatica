@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "653486016884",
+    "project_id": "miprimernumismatica",
+    "storage_bucket": "miprimernumismatica.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:653486016884:android:d94d663d1aaa202e64c421",
+        "android_client_info": {
+          "package_name": "com.example.mi_primera_numismatica"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALqZsD1CL58CkTlpaHWKzfRK9nHOTEyDA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

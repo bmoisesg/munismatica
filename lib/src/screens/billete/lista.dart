@@ -24,7 +24,6 @@ class _PageBilleteListaState extends State<PageBilleteLista> {
   @override
   void initState() {
     super.initState();
-    print('valor para la lista ${widget.valor}');
   }
 
   @override

@@ -12,16 +12,16 @@ class PageMoneda extends StatefulWidget {
 
 class _PageMonedaState extends State<PageMoneda> {
   Future<dynamic> getData() async {
-    List listaEcuestas = [];
+    List lista = [];
     DatabaseReference ref = FirebaseDatabase.instance.ref();
-    DataSnapshot snapshot = await ref.child('categorias/').get();
+    DataSnapshot snapshot = await ref.child('moneda/').get();
     if (snapshot.exists) {
       if (snapshot.value != null && snapshot.value is Map<dynamic, dynamic>) {
         Map<dynamic, dynamic> dataMap = snapshot.value as Map;
         dataMap.forEach((key, value) {
-          listaEcuestas.add({"id": key, "categoria": value['moneda_categoria']});
+          lista.add({"id": key, "categoria": value['categoria']});
         });
-        return listaEcuestas;
+        return lista;
       }
     }
     return [];
@@ -56,10 +56,9 @@ class _PageMonedaState extends State<PageMoneda> {
                       try {
                         if (_ctrl.text == "") return;
                         DatabaseReference ref = FirebaseDatabase.instance.ref();
-                        var data = {
-                          "moneda_categoria": _ctrl.text,
-                        };
-                        await ref.child('categorias').push().set(data);
+
+                        var data = {"categoria": _ctrl.text};
+                        await ref.child('moneda').push().set(data);
                         Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Categoria agregada!')));
                         setState(() {});
@@ -118,7 +117,12 @@ class _PageMonedaState extends State<PageMoneda> {
                           fnt: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => PageMonedaLista(valor: snapshot.data![index]['categoria']!)),
+                              MaterialPageRoute(
+                                builder: (context) => PageMonedaLista(
+                                  idCategoria: snapshot.data![index]['id']!,
+                                  nombreCategoria: snapshot.data![index]['categoria']!,
+                                ),
+                              ),
                             );
                           },
                         );

@@ -62,10 +62,7 @@ class _HomeState extends State<Home> {
                   title: 'Monedas',
                   icon: const Icon(Icons.monetization_on),
                   fnt: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const PageMoneda()),
-                    );
+                    Navigator.pushNamed(context, '/moneda');
                   },
                 ),
               ),
@@ -75,10 +72,7 @@ class _HomeState extends State<Home> {
                   title: 'Billetes',
                   icon: const Icon(Icons.payments),
                   fnt: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const PageBillete()),
-                    );
+                    Navigator.pushNamed(context, '/billete');
                   },
                 ),
               ),

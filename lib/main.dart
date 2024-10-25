@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mi_primera_numismatica/src/screens/home.dart';
 import 'package:firebase_core/firebase_core.dart' show Firebase;
+import 'package:mi_primera_numismatica/src/utils/routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +22,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 37, 80, 199)),
         useMaterial3: true,
       ),
-      home: const Home(),
+      initialRoute: '/',
+      onGenerateRoute: AppRoutes.generateRoute,
     );
   }
 }

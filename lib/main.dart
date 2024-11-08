@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:mi_primera_numismatica/src/screens/home.dart';
 import 'package:firebase_core/firebase_core.dart' show Firebase;
+import 'package:mi_primera_numismatica/src/utils/provider/prover.dart';
 import 'package:mi_primera_numismatica/src/utils/routes.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => AppProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

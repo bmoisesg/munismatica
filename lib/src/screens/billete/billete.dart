@@ -2,6 +2,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:mi_primera_numismatica/src/components/button.dart';
 import 'package:mi_primera_numismatica/src/screens/billete/lista.dart';
+import 'package:mi_primera_numismatica/src/utils/provider/prover.dart';
+import 'package:provider/provider.dart';
 
 class PageBillete extends StatefulWidget {
   const PageBillete({super.key});
@@ -115,15 +117,10 @@ class _PageBilleteState extends State<PageBillete> {
                         return CustomButton(
                           title: snapshot.data![index]['categoria'] ?? "--",
                           fnt: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => PageBilleteLista(
-                                  idCategoria: snapshot.data![index]['id']!,
-                                  nombreCategoria: snapshot.data![index]['categoria']!,
-                                ),
-                              ),
-                            );
+                            final provider = Provider.of<AppProvider>(context, listen: false);
+                            provider.setIdCategoria(snapshot.data![index]['id']!);
+                            provider.setNombreCategoria(snapshot.data![index]['categoria']!);
+                            Navigator.pushNamed(context, '/billete_lista');
                           },
                         );
                       },

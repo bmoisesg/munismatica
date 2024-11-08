@@ -2,7 +2,6 @@ import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:mi_primera_numismatica/src/components/button.dart';
-import 'package:mi_primera_numismatica/src/screens/billete/agregar.dart';
 import 'package:mi_primera_numismatica/src/utils/provider/prover.dart';
 
 class PageBilleteLista extends StatefulWidget {

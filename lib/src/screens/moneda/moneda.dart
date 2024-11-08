@@ -1,7 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:mi_primera_numismatica/src/components/button.dart';
-import 'package:mi_primera_numismatica/src/screens/moneda/lista.dart';
 import 'package:mi_primera_numismatica/src/utils/provider/prover.dart';
 import 'package:provider/provider.dart';
 
@@ -31,7 +32,7 @@ class _PageMonedaState extends State<PageMoneda> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController _ctrl = TextEditingController();
+    TextEditingController ctrl = TextEditingController();
     return Consumer<AppProvider>(
       builder: (_, provider, __) => Scaffold(
         appBar: AppBar(
@@ -57,16 +58,16 @@ class _PageMonedaState extends State<PageMoneda> {
                     TextButton(
                       onPressed: () async {
                         try {
-                          if (_ctrl.text == "") return;
+                          if (ctrl.text == "") return;
                           DatabaseReference ref = FirebaseDatabase.instance.ref();
 
-                          var data = {"categoria": _ctrl.text};
+                          var data = {"categoria": ctrl.text};
                           await ref.child('moneda').push().set(data);
                           Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Categoria agregada!')));
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Categoria agregada!')));
                           setState(() {});
                         } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error para agregar categoria')));
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Error para agregar categoria')));
                         }
                       },
                       child: const Text('OK'),
@@ -77,8 +78,8 @@ class _PageMonedaState extends State<PageMoneda> {
                     children: [
                       TextFormField(
                         keyboardType: TextInputType.text,
-                        controller: _ctrl,
-                        decoration: InputDecoration(
+                        controller: ctrl,
+                        decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: "Nombre",
                           fillColor: Colors.transparent,

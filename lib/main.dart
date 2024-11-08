@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart' show Firebase;
 import 'package:mi_primera_numismatica/src/utils/provider/prover.dart';
@@ -25,7 +27,7 @@ class MyApp extends StatelessWidget {
       title: 'Mi primer numismatica',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 37, 80, 199)),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 37, 80, 199)),
         useMaterial3: true,
       ),
       initialRoute: '/',

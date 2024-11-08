@@ -17,7 +17,7 @@ class _CustomButtonState extends State<CustomButton> {
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.all(15),
         shadowColor: Colors.black,
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(1),
             bottomRight: Radius.circular(1),

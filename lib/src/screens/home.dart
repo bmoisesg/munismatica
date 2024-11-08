@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:mi_primera_numismatica/src/components/button.dart';
-import 'package:mi_primera_numismatica/src/screens/billete/billete.dart';
-import 'package:mi_primera_numismatica/src/screens/moneda/Moneda.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});

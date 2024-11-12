@@ -8,14 +8,14 @@ import 'package:intl/intl.dart';
 import 'package:mi_primera_numismatica/src/utils/provider/prover.dart';
 import 'package:provider/provider.dart';
 
-class PageAgregar extends StatefulWidget {
-  const PageAgregar({super.key});
+class PageBilleteAgregar extends StatefulWidget {
+  const PageBilleteAgregar({super.key});
 
   @override
-  State<PageAgregar> createState() => _PageAgregarState();
+  State<PageBilleteAgregar> createState() => _PageBilleteAgregarState();
 }
 
-class _PageAgregarState extends State<PageAgregar> {
+class _PageBilleteAgregarState extends State<PageBilleteAgregar> {
   TextEditingController ctrl = TextEditingController();
 
   @override
@@ -54,8 +54,8 @@ class _PageAgregarState extends State<PageAgregar> {
                       "año": ctrl.text,
                       "fecha_ingreso": fechaIngreso,
                     };
-                    await ref.child('moneda/${provider.idCategoria}/elementos').push().set(data);
-                    await CustomDialog.show(context: context, contenido: 'Moneda agregada!');
+                    await ref.child('billete/${provider.idCategoria}/elementos').push().set(data);
+                    await CustomDialog.show(context: context, contenido: 'Billete agregado!');
                     Navigator.pop(context);
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Error para agregar ')));

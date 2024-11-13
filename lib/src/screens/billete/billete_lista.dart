@@ -1,3 +1,4 @@
+import 'package:mi_primera_numismatica/src/model/billete_model.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -12,8 +13,8 @@ class PageBilleteLista extends StatefulWidget {
 }
 
 class _PageBilleteListaState extends State<PageBilleteLista> {
-  Future<dynamic> getData(String idCategoria) async {
-    List lista = [];
+  Future<List<BilleteModel>> getData(String idCategoria) async {
+    List<BilleteModel> lista = [];
     DatabaseReference ref = FirebaseDatabase.instance.ref();
     DataSnapshot snapshot = await ref.child('billete/$idCategoria/elementos').get();
 
@@ -22,10 +23,7 @@ class _PageBilleteListaState extends State<PageBilleteLista> {
         Map<dynamic, dynamic> dataMap = snapshot.value as Map;
 
         dataMap.forEach((key, value) {
-          lista.add({
-            "id": key,
-            "data": value['año']!,
-          });
+          lista.add(BilleteModel.fromMap(value));
         });
       }
       return lista;
@@ -42,13 +40,13 @@ class _PageBilleteListaState extends State<PageBilleteLista> {
           title: const Text('Billete'),
           elevation: 30,
         ),
-        body: FutureBuilder(
+        body: FutureBuilder<List<BilleteModel>>(
           future: getData(provider.idCategoria),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.connectionState == ConnectionState.done) {
-              final lista = snapshot.data;
+              List<BilleteModel> lista = snapshot.data!;
               return ListView.builder(
                 physics: const BouncingScrollPhysics(),
                 itemCount: lista.length,
@@ -56,7 +54,7 @@ class _PageBilleteListaState extends State<PageBilleteLista> {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
                     child: CustomButton(
-                      title: lista[index]['data'],
+                      title: lista[index].anio,
                       fnt: () {},
                     ),
                   );

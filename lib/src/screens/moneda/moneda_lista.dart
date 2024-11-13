@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mi_primera_numismatica/src/components/button.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:mi_primera_numismatica/src/model/moneda_model.dart';
 import 'package:mi_primera_numismatica/src/utils/provider/prover.dart';
 import 'package:provider/provider.dart';
 
@@ -12,8 +13,8 @@ class PageMonedaLista extends StatefulWidget {
 }
 
 class _PageMonedaListaState extends State<PageMonedaLista> {
-  Future<dynamic> getData(String idCategoria) async {
-    List lista = [];
+  Future<List<MonedaModel>> getData(String idCategoria) async {
+    List<MonedaModel> lista = [];
     DatabaseReference ref = FirebaseDatabase.instance.ref();
     DataSnapshot snapshot = await ref.child('moneda/$idCategoria/elementos').get();
 
@@ -22,10 +23,7 @@ class _PageMonedaListaState extends State<PageMonedaLista> {
         Map<dynamic, dynamic> dataMap = snapshot.value as Map;
 
         dataMap.forEach((key, value) {
-          lista.add({
-            "id": key,
-            "data": value['año']!,
-          });
+          lista.add(MonedaModel.fromMap(value));
         });
       }
       return lista;
@@ -47,13 +45,13 @@ class _PageMonedaListaState extends State<PageMonedaLista> {
           title: Text('Monedas - ${provider.nombreCategoria}'),
           elevation: 30,
         ),
-        body: FutureBuilder(
+        body: FutureBuilder<List<MonedaModel>>(
           future: getData(provider.idCategoria),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.connectionState == ConnectionState.done) {
-              final List lista = snapshot.data;
+              List<MonedaModel> lista = snapshot.data!;
               return ListView.builder(
                 physics: const BouncingScrollPhysics(),
                 itemCount: lista.length,
@@ -61,7 +59,7 @@ class _PageMonedaListaState extends State<PageMonedaLista> {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
                     child: CustomButton(
-                      title: lista[index]['data'],
+                      title: lista[index].anio,
                       fnt: () {},
                     ),
                   );

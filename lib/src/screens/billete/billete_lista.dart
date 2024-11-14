@@ -1,3 +1,4 @@
+import 'package:mi_primera_numismatica/src/components/appbar.dart';
 import 'package:mi_primera_numismatica/src/model/billete_model.dart';
 import 'package:mi_primera_numismatica/src/utils/services/billete_service.dart';
 import 'package:provider/provider.dart';
@@ -31,11 +32,7 @@ class _PageBilleteListaState extends State<PageBilleteLista> {
   Widget build(BuildContext context) {
     return Consumer<AppProvider>(
       builder: (_, provider, __) => Scaffold(
-        appBar: AppBar(
-          // title: Text('Billete - ${provider.nombreCategoria}'),
-          title: const Text('Billete'),
-          elevation: 30,
-        ),
+        appBar: CustomAppbar(title: 'Billete - ${provider.nombreCategoria}'),
         body: FutureBuilder<List<BilleteModel>>(
           future: getData(provider.idCategoria),
           builder: (context, snapshot) {

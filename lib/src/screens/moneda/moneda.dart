@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:mi_primera_numismatica/src/components/appbar.dart';
 import 'package:mi_primera_numismatica/src/components/button.dart';
 import 'package:mi_primera_numismatica/src/utils/provider/prover.dart';
 import 'package:mi_primera_numismatica/src/utils/services/moneda_service.dart';
@@ -31,10 +32,7 @@ class _PageMonedaState extends State<PageMoneda> {
     TextEditingController ctrl = TextEditingController();
     return Consumer<AppProvider>(
       builder: (_, provider, __) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Monedas'),
-          elevation: 30,
-        ),
+        appBar: const CustomAppbar(title: 'Moneda'),
         floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.add),
           onPressed: () async {

@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:mi_primera_numismatica/src/components/appbar.dart';
 import 'package:mi_primera_numismatica/src/components/button.dart';
 import 'package:mi_primera_numismatica/src/utils/provider/prover.dart';
 import 'package:mi_primera_numismatica/src/utils/services/billete_service.dart';
@@ -30,10 +31,7 @@ class _PageBilleteState extends State<PageBillete> {
   Widget build(BuildContext context) {
     TextEditingController ctrl = TextEditingController();
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Billetes'),
-        elevation: 30,
-      ),
+      appBar: const CustomAppbar(title: 'Billetes'),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () async {

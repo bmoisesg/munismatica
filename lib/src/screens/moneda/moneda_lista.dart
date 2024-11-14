@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mi_primera_numismatica/src/components/appbar.dart';
 import 'package:mi_primera_numismatica/src/components/button.dart';
 import 'package:mi_primera_numismatica/src/model/moneda_model.dart';
 import 'package:mi_primera_numismatica/src/utils/provider/prover.dart';
@@ -38,10 +39,7 @@ class _PageMonedaListaState extends State<PageMonedaLista> {
   Widget build(BuildContext context) {
     return Consumer<AppProvider>(
       builder: (_, provider, __) => Scaffold(
-        appBar: AppBar(
-          title: Text('Monedas - ${provider.nombreCategoria}'),
-          elevation: 30,
-        ),
+        appBar: CustomAppbar(title: 'Monedas - ${provider.nombreCategoria}'),
         body: FutureBuilder<List<MonedaModel>>(
           future: getData(provider.idCategoria),
           builder: (context, snapshot) {

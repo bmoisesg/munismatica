@@ -20,7 +20,7 @@ class _PageMonedaListaState extends State<PageMonedaLista> {
 
     if (response != null) {
       response.forEach((key, value) {
-        lista.add(MonedaModel.fromMap(value));
+        lista.add(MonedaModel.fromMap(value, key));
       });
 
       lista.sort((a, b) => a.anio.compareTo(b.anio));
@@ -47,23 +47,47 @@ class _PageMonedaListaState extends State<PageMonedaLista> {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.connectionState == ConnectionState.done) {
               List<MonedaModel> lista = snapshot.data!;
-              return GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 5,
-                  crossAxisSpacing: 5,
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    mainAxisSpacing: 15,
+                    crossAxisSpacing: 15,
+                  ),
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: lista.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Stack(
+                      children: [
+                        CustomButton(
+                          title: lista[index].anio,
+                          fnt: () {},
+                        ),
+                        Positioned(
+                          right: 0,
+                          top: 0,
+                          child: SizedBox(
+                            width: 30,
+                            height: 30,
+                            child: IconButton(
+                              onPressed: () async {
+                                final result = await MonedaService().deleteMoneda(provider.idCategoria, lista[index].id);
+                                if (result) {
+                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Eliminado con exito')));
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Error para eliminar ')));
+                                }
+                              },
+                              padding: EdgeInsets.zero,
+                              icon: const Icon(Icons.delete_outline, color: Color.fromARGB(255, 213, 212, 212)),
+                            ),
+                          ),
+                        )
+                      ],
+                    );
+                  },
                 ),
-                physics: const BouncingScrollPhysics(),
-                itemCount: lista.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-                    child: CustomButton(
-                      title: lista[index].anio,
-                      fnt: () {},
-                    ),
-                  );
-                },
               );
             } else {
               return Container();

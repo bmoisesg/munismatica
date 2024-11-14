@@ -42,4 +42,14 @@ class MonedaService {
       return false;
     }
   }
+
+  Future deleteMoneda(String idCategoria, String idElemento) async {
+    try {
+      DatabaseReference ref = FirebaseDatabase.instance.ref();
+      await ref.child('moneda/$idCategoria/elementos/$idElemento').remove();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

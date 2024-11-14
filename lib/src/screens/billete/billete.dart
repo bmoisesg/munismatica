@@ -100,12 +100,8 @@ class _PageBilleteState extends State<PageBillete> {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.connectionState == ConnectionState.done) {
-                    return GridView.builder(
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 10,
-                        crossAxisSpacing: 10,
-                      ),
+                    return ListView.separated(
+                      separatorBuilder: (context, index) => const SizedBox(height: 20),
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
                         return CustomButton(

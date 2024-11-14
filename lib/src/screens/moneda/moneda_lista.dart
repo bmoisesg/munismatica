@@ -49,7 +49,12 @@ class _PageMonedaListaState extends State<PageMonedaLista> {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.connectionState == ConnectionState.done) {
               List<MonedaModel> lista = snapshot.data!;
-              return ListView.builder(
+              return GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  mainAxisSpacing: 5,
+                  crossAxisSpacing: 5,
+                ),
                 physics: const BouncingScrollPhysics(),
                 itemCount: lista.length,
                 itemBuilder: (BuildContext context, int index) {

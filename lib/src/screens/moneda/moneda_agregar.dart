@@ -1,11 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:mi_primera_numismatica/src/components/button.dart';
 import 'package:mi_primera_numismatica/src/components/dialog/dialog.dart';
-import 'package:intl/intl.dart';
 import 'package:mi_primera_numismatica/src/utils/provider/prover.dart';
+import 'package:mi_primera_numismatica/src/utils/services/moneda_service.dart';
 import 'package:provider/provider.dart';
 
 class PageMonedaAgregar extends StatefulWidget {
@@ -23,7 +22,7 @@ class _PageMonedaAgregarState extends State<PageMonedaAgregar> {
     return Consumer<AppProvider>(
       builder: (_, provider, __) => Scaffold(
         appBar: AppBar(
-          title: const Text("Agregar Elemento"),
+          title: const Text("Agregar Moneda"),
           elevation: 30,
         ),
         body: Padding(
@@ -46,18 +45,11 @@ class _PageMonedaAgregarState extends State<PageMonedaAgregar> {
               CustomButton(
                 title: 'Agregar',
                 fnt: () async {
-                  try {
-                    DateTime now = DateTime.now();
-                    var fechaIngreso = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);
-                    DatabaseReference ref = FirebaseDatabase.instance.ref();
-                    var data = {
-                      "año": ctrl.text,
-                      "fecha_ingreso": fechaIngreso,
-                    };
-                    await ref.child('moneda/${provider.idCategoria}/elementos').push().set(data);
+                  final resultado = await MonedaService().setMoneda(ctrl.text, provider.idCategoria);
+                  if (resultado) {
                     await CustomDialog.show(context: context, contenido: 'Moneda agregada!');
                     Navigator.pop(context);
-                  } catch (e) {
+                  } else {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Error para agregar ')));
                   }
                 },

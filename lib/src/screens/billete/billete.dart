@@ -1,9 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:mi_primera_numismatica/src/components/button.dart';
 import 'package:mi_primera_numismatica/src/utils/provider/prover.dart';
+import 'package:mi_primera_numismatica/src/utils/services/billete_service.dart';
 import 'package:provider/provider.dart';
 
 class PageBillete extends StatefulWidget {
@@ -16,16 +16,12 @@ class PageBillete extends StatefulWidget {
 class _PageBilleteState extends State<PageBillete> {
   Future<dynamic> getData() async {
     List lista = [];
-    DatabaseReference ref = FirebaseDatabase.instance.ref();
-    DataSnapshot snapshot = await ref.child('billete/').get();
-    if (snapshot.exists) {
-      if (snapshot.value != null && snapshot.value is Map<dynamic, dynamic>) {
-        Map<dynamic, dynamic> dataMap = snapshot.value as Map;
-        dataMap.forEach((key, value) {
-          lista.add({"id": key, "categoria": value['categoria']});
-        });
-        return lista;
-      }
+    final response = await BilleteService().getCategoriaBilletes();
+    if (response != null) {
+      response.forEach((key, value) {
+        lista.add({"id": key, "categoria": value['categoria']});
+      });
+      return lista;
     }
     return [];
   }
@@ -56,16 +52,13 @@ class _PageBilleteState extends State<PageBillete> {
                   ),
                   TextButton(
                     onPressed: () async {
-                      try {
-                        if (ctrl.text == "") return;
-                        DatabaseReference ref = FirebaseDatabase.instance.ref();
-
-                        var data = {"categoria": ctrl.text};
-                        await ref.child('billete').push().set(data);
-                        Navigator.pop(context);
+                      if (ctrl.text == "") return;
+                      final response = await BilleteService().setCategoriaBillete(ctrl.text);
+                      Navigator.pop(context);
+                      if (response) {
                         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Categoria agregada!')));
                         setState(() {});
-                      } catch (e) {
+                      } else {
                         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Error para agregar categoria')));
                       }
                     },

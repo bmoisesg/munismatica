@@ -1,7 +1,7 @@
 import 'package:mi_primera_numismatica/src/model/billete_model.dart';
+import 'package:mi_primera_numismatica/src/utils/services/billete_service.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:mi_primera_numismatica/src/components/button.dart';
 import 'package:mi_primera_numismatica/src/utils/provider/prover.dart';
 
@@ -15,17 +15,13 @@ class PageBilleteLista extends StatefulWidget {
 class _PageBilleteListaState extends State<PageBilleteLista> {
   Future<List<BilleteModel>> getData(String idCategoria) async {
     List<BilleteModel> lista = [];
-    DatabaseReference ref = FirebaseDatabase.instance.ref();
-    DataSnapshot snapshot = await ref.child('billete/$idCategoria/elementos').get();
+    final response = await BilleteService().getBilletes(idCategoria);
 
-    if (snapshot.exists) {
-      if (snapshot.value != null && snapshot.value is Map<dynamic, dynamic>) {
-        Map<dynamic, dynamic> dataMap = snapshot.value as Map;
+    if (response != null) {
+      response.forEach((key, value) {
+        lista.add(BilleteModel.fromMap(value));
+      });
 
-        dataMap.forEach((key, value) {
-          lista.add(BilleteModel.fromMap(value));
-        });
-      }
       return lista;
     }
     return [];

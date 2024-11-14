@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mi_primera_numismatica/src/components/button.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:mi_primera_numismatica/src/model/moneda_model.dart';
 import 'package:mi_primera_numismatica/src/utils/provider/prover.dart';
+import 'package:mi_primera_numismatica/src/utils/services/moneda_service.dart';
 import 'package:provider/provider.dart';
 
 class PageMonedaLista extends StatefulWidget {
@@ -15,17 +15,14 @@ class PageMonedaLista extends StatefulWidget {
 class _PageMonedaListaState extends State<PageMonedaLista> {
   Future<List<MonedaModel>> getData(String idCategoria) async {
     List<MonedaModel> lista = [];
-    DatabaseReference ref = FirebaseDatabase.instance.ref();
-    DataSnapshot snapshot = await ref.child('moneda/$idCategoria/elementos').get();
+    final response = await MonedaService().getMonedas(idCategoria);
 
-    if (snapshot.exists) {
-      if (snapshot.value != null && snapshot.value is Map<dynamic, dynamic>) {
-        Map<dynamic, dynamic> dataMap = snapshot.value as Map;
+    if (response != null) {
+      response.forEach((key, value) {
+        lista.add(MonedaModel.fromMap(value));
+      });
 
-        dataMap.forEach((key, value) {
-          lista.add(MonedaModel.fromMap(value));
-        });
-      }
+      lista.sort((a, b) => a.anio.compareTo(b.anio));
       return lista;
     }
     return [];
@@ -74,8 +71,6 @@ class _PageMonedaListaState extends State<PageMonedaLista> {
           child: const Icon(Icons.add),
           onPressed: () async {
             Navigator.pushNamed(context, '/moneda_agregar');
-
-            // getData();
           },
         ),
       ),

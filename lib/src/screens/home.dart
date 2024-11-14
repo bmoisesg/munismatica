@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:mi_primera_numismatica/src/components/button.dart';
-import 'package:mi_primera_numismatica/src/screens/billete/billete.dart';
-import 'package:mi_primera_numismatica/src/screens/moneda/Moneda.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -60,12 +58,9 @@ class _HomeState extends State<Home> {
               Expanded(
                 child: CustomButton(
                   title: 'Monedas',
-                  icon: Icon(Icons.monetization_on),
+                  icon: const Icon(Icons.monetization_on),
                   fnt: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const PageMoneda()),
-                    );
+                    Navigator.pushNamed(context, '/moneda');
                   },
                 ),
               ),
@@ -73,12 +68,9 @@ class _HomeState extends State<Home> {
               Expanded(
                 child: CustomButton(
                   title: 'Billetes',
-                  icon: Icon(Icons.payments),
+                  icon: const Icon(Icons.payments),
                   fnt: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const PageBillete()),
-                    );
+                    Navigator.pushNamed(context, '/billete');
                   },
                 ),
               ),

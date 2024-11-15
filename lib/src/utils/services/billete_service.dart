@@ -42,4 +42,14 @@ class BilleteService {
       return false;
     }
   }
+
+  Future deleteBillete(String idCategoria, String idElemento) async {
+    try {
+      DatabaseReference ref = FirebaseDatabase.instance.ref();
+      await ref.child('billete/$idCategoria/elementos/$idElemento').remove();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

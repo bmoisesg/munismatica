@@ -72,12 +72,40 @@ class _PageMonedaListaState extends State<PageMonedaLista> {
                             height: 30,
                             child: IconButton(
                               onPressed: () async {
-                                final result = await MonedaService().deleteMoneda(provider.idCategoria, lista[index].id);
-                                if (result) {
-                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Eliminado con exito')));
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Error para eliminar ')));
-                                }
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text('Mensaje'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text('Cancelar'),
+                                        ),
+                                        TextButton(
+                                          child: const Text('Si, eliminar'),
+                                          onPressed: () async {
+                                            final result = await MonedaService().deleteMoneda(provider.idCategoria, lista[index].id);
+                                            if (result) {
+                                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Eliminado con exito')));
+                                            } else {
+                                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Error para eliminar ')));
+                                            }
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      ],
+                                      content: const Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text("¿Deseas eliminar este registro?"),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
                               },
                               padding: EdgeInsets.zero,
                               icon: const Icon(Icons.delete_outline, color: Color.fromARGB(255, 213, 212, 212)),

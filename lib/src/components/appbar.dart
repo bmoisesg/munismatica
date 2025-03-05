@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  const CustomAppbar({required this.title, super.key});
+  final Widget? actions;
+  const CustomAppbar({required this.title, this.actions, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +16,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
         },
         icon: const Icon(Icons.arrow_back_ios),
       ),
+      actions: [actions ?? Container()],
     );
   }
 

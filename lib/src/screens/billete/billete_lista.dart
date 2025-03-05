@@ -4,7 +4,7 @@ import 'package:mi_primera_numismatica/src/utils/services/billete_service.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:mi_primera_numismatica/src/components/button.dart';
-import 'package:mi_primera_numismatica/src/utils/provider/prover.dart';
+import 'package:mi_primera_numismatica/src/utils/provider/provider.dart';
 
 class PageBilleteLista extends StatefulWidget {
   const PageBilleteLista({super.key});

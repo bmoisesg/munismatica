@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:mi_primera_numismatica/src/components/button.dart';
+import 'package:mi_primera_numismatica/src/utils/provider/provider.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -60,6 +62,8 @@ class _HomeState extends State<Home> {
                   title: 'Monedas',
                   icon: const Icon(Icons.monetization_on),
                   fnt: () {
+                    final provider = Provider.of<AppProvider>(context, listen: false);
+                    provider.getDataCategoria();
                     Navigator.pushNamed(context, '/moneda');
                   },
                 ),

@@ -20,6 +20,13 @@ class _PageMonedaListaState extends State<PageMonedaLista> {
     List<MonedaModel> lista = provider.listaMonedas;
     Map<String, int> resumen = {};
 
+    int moneda_primera = int.parse(lista[0].anio);
+    int moneda_ultima = int.parse(lista[lista.length - 1].anio);
+
+    for (var i = moneda_primera; i < moneda_ultima; i++) {
+      resumen[i.toString()] = 0;
+    }
+
     for (var moneda in lista) {
       resumen[moneda.anio] = (resumen[moneda.anio] ?? 0) + 1;
     }
@@ -77,20 +84,28 @@ class _PageMonedaListaState extends State<PageMonedaLista> {
                               child: Container(
                                 margin: const EdgeInsets.only(bottom: 5),
                                 padding: const EdgeInsets.symmetric(vertical: 5),
-                                decoration: BoxDecoration(color: listpress[index] ? Colors.grey[300] : Colors.white),
+                                decoration: BoxDecoration(
+                                  color: listpress[index] ? Colors.grey[300] : Colors.white,
+                                ),
                                 child: Row(
                                   children: [
                                     Expanded(
                                       child: Text(
                                         e.value.key,
-                                        style: TextStyle(fontSize: 20),
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          color: e.value.value == 0 ? Colors.red : Colors.black,
+                                        ),
                                         textAlign: TextAlign.center,
                                       ),
                                     ),
                                     Expanded(
                                       child: Text(
                                         e.value.value.toString(),
-                                        style: TextStyle(fontSize: 20),
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          color: e.value.value == 0 ? Colors.red : Colors.black,
+                                        ),
                                         textAlign: TextAlign.center,
                                       ),
                                     ),

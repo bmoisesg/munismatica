@@ -1,8 +1,7 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:mi_primera_numismatica/src/components/appbar.dart';
 import 'package:mi_primera_numismatica/src/components/button.dart';
+import 'package:mi_primera_numismatica/src/model/categoria_model.dart';
 import 'package:mi_primera_numismatica/src/utils/provider/provider.dart';
 import 'package:mi_primera_numismatica/src/utils/services/moneda_service.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +20,7 @@ class _PageMonedaState extends State<PageMoneda> {
     final listaCategorias = provider.listaCategorias;
 
     return Scaffold(
-      appBar: const CustomAppbar(title: 'Moneda'),
+      appBar: const CustomAppbar(title: 'Categorias'),
       floatingActionButton: FloatingActionButton(
         onPressed: fntAgregarCategoria,
         child: const Icon(Icons.add),
@@ -29,23 +28,28 @@ class _PageMonedaState extends State<PageMoneda> {
       body: provider.isLoading
           ? const Center(child: CircularProgressIndicator())
           : Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.all(20),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 10),
-                  const Text('Categorias'),
+                  const Text(
+                    'Moneda',
+                    style: TextStyle(fontSize: 30),
+                  ),
                   const SizedBox(height: 10),
                   Expanded(
                     child: ListView.separated(
-                      separatorBuilder: (context, index) => const SizedBox(height: 20),
+                      separatorBuilder: (_, __) => const SizedBox(height: 20),
                       itemCount: listaCategorias.length,
                       itemBuilder: (context, i) {
+                        final CategoriaModel categoria = listaCategorias[i];
                         return CustomButton(
-                          title: listaCategorias[i]['categoria'] ?? "--",
+                          title: categoria.titulo,
                           fnt: () {
-                            provider.setIdCategoria(listaCategorias[i]['id']!);
-                            provider.setNombreCategoria(listaCategorias[i]['categoria']!);
-                            provider.getDataMonedas(listaCategorias[i]['id']!);
+                            provider.setIdCategoria(categoria.id);
+                            provider.setNombreCategoria(categoria.titulo);
+
+                            provider.getDataMonedas(categoria.id);
                             Navigator.pushNamed(context, '/moneda_lista');
                           },
                         );

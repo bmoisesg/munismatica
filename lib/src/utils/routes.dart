@@ -12,7 +12,7 @@ class AppRoutes {
     switch (url.name) {
       case '/':
         return MaterialPageRoute(builder: (_) => const Home());
-      case '/moneda':
+      case '/moneda_categoria':
         return MaterialPageRoute(builder: (_) => const PageMoneda());
       case '/moneda_lista':
         return MaterialPageRoute(builder: (_) => const PageMonedaLista());

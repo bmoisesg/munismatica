@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mi_primera_numismatica/src/model/categoria_model.dart';
 import 'package:mi_primera_numismatica/src/model/moneda_model.dart';
 import 'package:mi_primera_numismatica/src/utils/services/moneda_service.dart';
 
@@ -18,7 +19,8 @@ class AppProvider extends ChangeNotifier {
   }
 
   bool isLoading = false;
-  List listaCategorias = [];
+  List<CategoriaModel> listaCategorias = [];
+  List<MonedaModel> listaMonedas = [];
 
   void requestMoneda() {}
 
@@ -27,10 +29,11 @@ class AppProvider extends ChangeNotifier {
     notifyListeners();
     final response = await MonedaService().getCategoriaMoneda();
     if (response != null) {
-      listaCategorias = [];
+      listaCategorias.clear();
       response.forEach((key, value) {
-        listaCategorias.add({"id": key, "categoria": value['categoria']});
+        listaCategorias.add(CategoriaModel.fromMap(value, key));
       });
+
       isLoading = false;
       notifyListeners();
       return listaCategorias;
@@ -39,8 +42,6 @@ class AppProvider extends ChangeNotifier {
     notifyListeners();
     return [];
   }
-
-  List<MonedaModel> listaMonedas = [];
 
   Future<List<MonedaModel>> getDataMonedas(String idCategoria) async {
     isLoading = true;

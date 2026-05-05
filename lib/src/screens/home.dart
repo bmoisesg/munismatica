@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:mi_primera_numismatica/src/components/button.dart';
 import 'package:mi_primera_numismatica/src/utils/provider/provider.dart';
@@ -17,36 +16,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text('Precaucion'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('Cancelar'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    exit(0);
-                  },
-                  child: const Text('Si, salir'),
-                ),
-              ],
-              content: const Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text("¿Estas seguro que quieres salir de la aplicacion?"),
-                ],
-              ),
-            );
-          },
-        );
-      },
+      onPopInvoked: fntAdvertencia,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Mi primer numismatica'),
@@ -64,7 +34,7 @@ class _HomeState extends State<Home> {
                   fnt: () {
                     final provider = Provider.of<AppProvider>(context, listen: false);
                     provider.getDataCategoria();
-                    Navigator.pushNamed(context, '/moneda');
+                    Navigator.pushNamed(context, '/moneda_categoria');
                   },
                 ),
               ),
@@ -82,6 +52,37 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
+    );
+  }
+
+  void fntAdvertencia(bool) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Precaucion'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {
+                exit(0);
+              },
+              child: const Text('Si, salir'),
+            ),
+          ],
+          content: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text("¿Estas seguro que quieres salir de la aplicacion?"),
+            ],
+          ),
+        );
+      },
     );
   }
 }

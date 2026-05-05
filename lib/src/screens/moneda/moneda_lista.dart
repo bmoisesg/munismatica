@@ -1,208 +1,115 @@
 import 'package:flutter/material.dart';
 import 'package:mi_primera_numismatica/src/components/appbar.dart';
 import 'package:mi_primera_numismatica/src/components/button.dart';
+import 'package:mi_primera_numismatica/src/components/dialog/dialog.dart';
 import 'package:mi_primera_numismatica/src/model/moneda_model.dart';
 import 'package:mi_primera_numismatica/src/utils/provider/provider.dart';
 import 'package:mi_primera_numismatica/src/utils/services/moneda_service.dart';
 import 'package:provider/provider.dart';
 
-class PageMonedaLista extends StatefulWidget {
-  const PageMonedaLista({super.key});
+class MonedaScreen extends StatefulWidget {
+  const MonedaScreen({super.key});
 
   @override
-  State<PageMonedaLista> createState() => _PageMonedaListaState();
+  State<MonedaScreen> createState() => _MonedaScreenState();
 }
 
-class _PageMonedaListaState extends State<PageMonedaLista> {
+class _MonedaScreenState extends State<MonedaScreen> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<AppProvider>(context, listen: true);
-    List<MonedaModel> lista = provider.listaMonedas;
-    Map<String, int> resumen = {};
+    final String nombreCategoria = provider.nombreCategoria;
+    final bool isloading = provider.isLoading;
+    List<MonedaModel> listaMonedas = provider.listaMonedas;
 
-    int moneda_primera = int.parse(lista[0].anio);
-    int moneda_ultima = int.parse(lista[lista.length - 1].anio);
-
-    for (var i = moneda_primera; i < moneda_ultima; i++) {
-      resumen[i.toString()] = 0;
-    }
-
-    for (var moneda in lista) {
-      resumen[moneda.anio] = (resumen[moneda.anio] ?? 0) + 1;
-    }
-
-    return Scaffold(
-      appBar: CustomAppbar(
-        title: 'Monedas - ${provider.nombreCategoria}',
-        actions: IconButton(
-          icon: const Icon(Icons.info),
-          onPressed: () {
-            List<bool> listpress = [];
-            for (var element in resumen.values) {
-              listpress.add(false);
-            }
-            showModalBottomSheet(
-              context: context,
-              builder: (context) {
-                return StatefulBuilder(
-                  builder: (context, setState) => Container(
-                    padding: const EdgeInsets.all(15),
-                    child: Scrollbar(
-                      thumbVisibility: true,
-                      child: SingleChildScrollView(
-                        child: Column(children: [
-                          Container(
-                            margin: const EdgeInsets.only(bottom: 5),
-                            padding: const EdgeInsets.symmetric(vertical: 5),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    'Año',
-                                    style: TextStyle(fontSize: 20),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    'Cantidad',
-                                    style: TextStyle(fontSize: 20),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          ...resumen.entries.toList().asMap().entries.map((e) {
-                            int index = e.key;
-                            return GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  listpress[index] = !listpress[index];
-                                });
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.only(bottom: 5),
-                                padding: const EdgeInsets.symmetric(vertical: 5),
-                                decoration: BoxDecoration(
-                                  color: listpress[index] ? Colors.grey[300] : Colors.white,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        e.value.key,
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          color: e.value.value == 0 ? Colors.red : Colors.black,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Text(
-                                        e.value.value.toString(),
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          color: e.value.value == 0 ? Colors.red : Colors.black,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  ],
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          provider.cleanListaMonedas();
+        }
+      },
+      child: Scaffold(
+        appBar: CustomAppbar(title: 'Monedas - $nombreCategoria'),
+        body: Stack(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    '${listaMonedas.length} Moneda(s)',
+                    style: const TextStyle(fontStyle: FontStyle.italic),
+                    textAlign: TextAlign.end,
+                  ),
+                  const SizedBox(height: 5),
+                  Expanded(
+                    child: GridView.builder(
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        mainAxisSpacing: 15,
+                        crossAxisSpacing: 15,
+                        childAspectRatio: 2 / 1,
+                      ),
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: listaMonedas.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final moneda = listaMonedas[index];
+                        return Stack(
+                          children: [
+                            CustomButton(title: moneda.anio, fnt: () {}),
+                            Positioned(
+                              right: 0,
+                              top: 0,
+                              child: SizedBox(
+                                width: 30,
+                                height: 30,
+                                child: IconButton(
+                                  icon: const Icon(Icons.delete_outline, color: Color.fromARGB(255, 213, 212, 212)),
+                                  padding: EdgeInsets.zero,
+                                  onPressed: () => fntDeleteMoneda(moneda.id),
                                 ),
                               ),
-                            );
-                          }).toList(),
-                        ]),
-                      ),
+                            )
+                          ],
+                        );
+                      },
                     ),
                   ),
-                );
-              },
-            );
+                ],
+              ),
+            ),
+            if (isloading) const Center(child: CircularProgressIndicator())
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.add),
+          onPressed: () async {
+            Navigator.pushNamed(context, '/moneda_agregar');
           },
         ),
       ),
-      body: Container(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Text('${lista.length} Monedas'),
-            Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, mainAxisSpacing: 15, crossAxisSpacing: 15, childAspectRatio: 2 / 1),
-                physics: const BouncingScrollPhysics(),
-                itemCount: lista.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Stack(
-                    children: [
-                      CustomButton(
-                        title: lista[index].anio,
-                        fnt: () {},
-                      ),
-                      Positioned(
-                        right: 0,
-                        top: 0,
-                        child: SizedBox(
-                          width: 30,
-                          height: 30,
-                          child: IconButton(
-                            onPressed: () async {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: const Text('Mensaje'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text('Cancelar'),
-                                      ),
-                                      TextButton(
-                                        child: const Text('Si, eliminar'),
-                                        onPressed: () async {
-                                          final result = await MonedaService().deleteMoneda(provider.idCategoria, lista[index].id);
-                                          if (result) {
-                                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Eliminado con exito')));
-                                          } else {
-                                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Error para eliminar ')));
-                                          }
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                    ],
-                                    content: const Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text("¿Deseas eliminar este registro?"),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                            padding: EdgeInsets.zero,
-                            icon: const Icon(Icons.delete_outline, color: Color.fromARGB(255, 213, 212, 212)),
-                          ),
-                        ),
-                      )
-                    ],
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () async {
-          Navigator.pushNamed(context, '/moneda_agregar');
-        },
-      ),
+    );
+  }
+
+  Future fntDeleteMoneda(String idMoneda) async {
+    final provider = Provider.of<AppProvider>(context, listen: false);
+    final String idCategoriaSelected = provider.idCategoria;
+
+    CustomDialog.yesOrNot(
+      context: context,
+      content: '¿Deseas eliminar esta moneda?',
+      fntOk: () async {
+        final result = await MonedaService().deleteMoneda(idCategoriaSelected, idMoneda);
+        if (result) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Eliminado con exito')));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Error para eliminar ')));
+        }
+        Navigator.pop(context);
+      },
+      fntCancel: () => Navigator.pop(context),
     );
   }
 }

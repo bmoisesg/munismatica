@@ -4,63 +4,47 @@ import 'package:mi_primera_numismatica/src/model/moneda_model.dart';
 import 'package:mi_primera_numismatica/src/utils/services/moneda_service.dart';
 
 class AppProvider extends ChangeNotifier {
-  String _nombreCategoria = "";
-  String get nombreCategoria => _nombreCategoria;
-  void setNombreCategoria(String nombreNuevo) {
-    _nombreCategoria = nombreNuevo;
-    notifyListeners();
-  }
-
-  String _idCategoria = "";
-  String get idCategoria => _idCategoria;
-  void setIdCategoria(String categoria) {
-    _idCategoria = categoria;
-    notifyListeners();
-  }
-
-  bool isLoading = false;
-  List<CategoriaModel> listaCategorias = [];
+  List<CategoriaModel> listaCategoriasMonedas = [];
   List<MonedaModel> listaMonedas = [];
+  bool isLoading = false;
+  String _nombreCategoria = "";
+  String _idCategoria = "";
+  String get nombreCategoria => _nombreCategoria;
+  String get idCategoria => _idCategoria;
 
-  void requestMoneda() {}
-
-  Future<dynamic> getDataCategoria() async {
+  Future getDataCategoriasMoneda() async {
     isLoading = true;
     notifyListeners();
-    final response = await MonedaService().getCategoriaMoneda();
-    if (response != null) {
-      listaCategorias.clear();
-      response.forEach((key, value) {
-        listaCategorias.add(CategoriaModel.fromMap(value, key));
-      });
-
-      isLoading = false;
-      notifyListeners();
-      return listaCategorias;
-    }
+    final List<CategoriaModel> response = await MonedaService().getCategoriasMonedas();
+    listaCategoriasMonedas.clear();
+    listaCategoriasMonedas.addAll(response);
     isLoading = false;
     notifyListeners();
-    return [];
   }
 
-  Future<List<MonedaModel>> getDataMonedas(String idCategoria) async {
+  void updateIdCategory(String newId) {
+    _idCategoria = newId;
+    notifyListeners();
+  }
+
+  void updateNameCategory(String newName) {
+    _nombreCategoria = newName;
+    notifyListeners();
+  }
+
+  Future getDataMonedasByIdCategory(String idCategoria) async {
     isLoading = true;
     notifyListeners();
-    final response = await MonedaService().getMonedas(idCategoria);
-
-    if (response != null) {
-      listaMonedas = [];
-      response.forEach((key, value) {
-        listaMonedas.add(MonedaModel.fromMap(value, key));
-      });
-
-      listaMonedas.sort((a, b) => a.anio.compareTo(b.anio));
-      isLoading = false;
-      notifyListeners();
-      return listaMonedas;
-    }
+    final List<MonedaModel> response = await MonedaService().getMonedas(idCategoria);
+    listaMonedas.clear();
+    listaMonedas.addAll(response);
+    listaMonedas.sort((a, b) => a.anio.compareTo(b.anio));
     isLoading = false;
     notifyListeners();
-    return [];
+  }
+
+  void cleanListaMonedas() {
+    listaMonedas.clear();
+    notifyListeners();
   }
 }

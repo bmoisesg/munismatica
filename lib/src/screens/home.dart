@@ -1,6 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:mi_primera_numismatica/src/components/button.dart';
+import 'package:mi_primera_numismatica/src/components/dialog/dialog.dart';
 import 'package:mi_primera_numismatica/src/utils/provider/provider.dart';
 import 'package:provider/provider.dart';
 
@@ -16,14 +16,14 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: fntAdvertencia,
+      onPopInvoked: (didPop) => CustomDialog.fntAdvertenciaExitApp(didPop, context),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Mi primer numismatica'),
           elevation: 30,
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
+        body: Container(
+          padding: const EdgeInsets.all(20.0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -31,11 +31,7 @@ class _HomeState extends State<Home> {
                 child: CustomButton(
                   title: 'Monedas',
                   icon: const Icon(Icons.monetization_on),
-                  fnt: () {
-                    final provider = Provider.of<AppProvider>(context, listen: false);
-                    provider.getDataCategoria();
-                    Navigator.pushNamed(context, '/moneda_categoria');
-                  },
+                  fnt: fntButtonMoneda,
                 ),
               ),
               const SizedBox(width: 10),
@@ -43,9 +39,7 @@ class _HomeState extends State<Home> {
                 child: CustomButton(
                   title: 'Billetes',
                   icon: const Icon(Icons.payments),
-                  fnt: () {
-                    Navigator.pushNamed(context, '/billete');
-                  },
+                  fnt: fntButtonBillete,
                 ),
               ),
             ],
@@ -55,34 +49,13 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void fntAdvertencia(bool) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Precaucion'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Cancelar'),
-            ),
-            TextButton(
-              onPressed: () {
-                exit(0);
-              },
-              child: const Text('Si, salir'),
-            ),
-          ],
-          content: const Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text("¿Estas seguro que quieres salir de la aplicacion?"),
-            ],
-          ),
-        );
-      },
-    );
+  void fntButtonMoneda() {
+    final provider = Provider.of<AppProvider>(context, listen: false);
+    provider.getDataCategoriasMoneda();
+    Navigator.pushNamed(context, '/moneda_categoria');
+  }
+
+  void fntButtonBillete() {
+    Navigator.pushNamed(context, '/billete');
   }
 }

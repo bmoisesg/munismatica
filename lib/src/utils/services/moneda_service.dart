@@ -1,19 +1,22 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:intl/intl.dart';
+import 'package:mi_primera_numismatica/src/model/model.dart';
 
 class MonedaService {
-  Future getMonedas(String idCategoria) async {
-    DatabaseReference ref = FirebaseDatabase.instance.ref();
-    DataSnapshot snapshot = await ref.child('moneda/$idCategoria/elementos').get();
-    if (snapshot.value != null) return snapshot.value;
-    return null;
+  DatabaseReference ref = FirebaseDatabase.instance.ref();
+
+  Future<List<CategoriaModel>> getCategoriasMonedas() async {
+    DataSnapshot snapshot = await ref.child('moneda/').get();
+    if (snapshot.value == null) return [];
+    final data = snapshot.value as Map<dynamic, dynamic>;
+    return data.entries.map((e) => CategoriaModel.fromMap(e.value, e.key)).toList();
   }
 
-  Future getCategoriaMoneda() async {
-    DatabaseReference ref = FirebaseDatabase.instance.ref();
-    DataSnapshot snapshot = await ref.child('moneda/').get();
-    if (snapshot.value != null) return snapshot.value;
-    return null;
+  Future<List<MonedaModel>> getMonedas(String idCategoria) async {
+    DataSnapshot snapshot = await ref.child('moneda/$idCategoria/elementos').get();
+    if (snapshot.value == null) return [];
+    final data = snapshot.value as Map<dynamic, dynamic>;
+    return data.entries.map((e) => MonedaModel.fromMap(e.value, e.key)).toList();
   }
 
   Future setCategoriaMoneda(String categoria) async {
@@ -43,10 +46,10 @@ class MonedaService {
     }
   }
 
-  Future deleteMoneda(String idCategoria, String idElemento) async {
+  Future deleteMoneda(String idCategoria, String idMoneda) async {
     try {
       DatabaseReference ref = FirebaseDatabase.instance.ref();
-      await ref.child('moneda/$idCategoria/elementos/$idElemento').remove();
+      await ref.child('moneda/$idCategoria/elementos/$idMoneda').remove();
       return true;
     } catch (e) {
       return false;

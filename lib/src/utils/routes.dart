@@ -13,9 +13,10 @@ class AppRoutes {
       case '/':
         return MaterialPageRoute(builder: (_) => const Home());
       case '/moneda_categoria':
-        return MaterialPageRoute(builder: (_) => const PageMoneda());
+        return MaterialPageRoute(builder: (_) => const CategoriaMonedaScreen());
       case '/moneda_lista':
-        return MaterialPageRoute(builder: (_) => const PageMonedaLista());
+        return MaterialPageRoute(builder: (_) => const MonedaScreen());
+
       case '/billete':
         return MaterialPageRoute(builder: (_) => const PageBillete());
       case '/billete_lista':

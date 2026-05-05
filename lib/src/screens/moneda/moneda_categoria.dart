@@ -6,59 +6,50 @@ import 'package:mi_primera_numismatica/src/utils/provider/provider.dart';
 import 'package:mi_primera_numismatica/src/utils/services/moneda_service.dart';
 import 'package:provider/provider.dart';
 
-class PageMoneda extends StatefulWidget {
-  const PageMoneda({super.key});
+class CategoriaMonedaScreen extends StatefulWidget {
+  const CategoriaMonedaScreen({super.key});
 
   @override
-  State<PageMoneda> createState() => _PageMonedaState();
+  State<CategoriaMonedaScreen> createState() => _CategoriaMonedaScreenState();
 }
 
-class _PageMonedaState extends State<PageMoneda> {
+class _CategoriaMonedaScreenState extends State<CategoriaMonedaScreen> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<AppProvider>(context, listen: true);
-    final listaCategorias = provider.listaCategorias;
+    final listaCategorias = provider.listaCategoriasMonedas;
+    final isloading = provider.isLoading;
 
     return Scaffold(
-      appBar: const CustomAppbar(title: 'Categorias'),
+      appBar: const CustomAppbar(title: 'Monedas Categorias'),
       floatingActionButton: FloatingActionButton(
         onPressed: fntAgregarCategoria,
         child: const Icon(Icons.add),
       ),
-      body: provider.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Container(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Moneda',
-                    style: TextStyle(fontSize: 30),
-                  ),
-                  const SizedBox(height: 10),
-                  Expanded(
-                    child: ListView.separated(
-                      separatorBuilder: (_, __) => const SizedBox(height: 20),
-                      itemCount: listaCategorias.length,
-                      itemBuilder: (context, i) {
-                        final CategoriaModel categoria = listaCategorias[i];
-                        return CustomButton(
-                          title: categoria.titulo,
-                          fnt: () {
-                            provider.setIdCategoria(categoria.id);
-                            provider.setNombreCategoria(categoria.titulo);
-
-                            provider.getDataMonedas(categoria.id);
-                            Navigator.pushNamed(context, '/moneda_lista');
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
+      body: Stack(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(20),
+            child: ListView.separated(
+              separatorBuilder: (_, __) => const SizedBox(height: 20),
+              itemCount: listaCategorias.length,
+              itemBuilder: (context, index) {
+                final CategoriaModel categoria = listaCategorias[index];
+                return CustomButton(
+                  title: 'Categoria: ${categoria.titulo}',
+                  fnt: () {
+                    provider.updateIdCategory(categoria.id);
+                    provider.updateNameCategory(categoria.titulo);
+                    provider.getDataMonedasByIdCategory(categoria.id);
+                    Navigator.pushNamed(context, '/moneda_lista');
+                  },
+                );
+              },
             ),
+          ),
+          if (isloading) const Center(child: CircularProgressIndicator())
+        ],
+      ),
     );
   }
 

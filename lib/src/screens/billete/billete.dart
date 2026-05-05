@@ -106,8 +106,8 @@ class _PageBilleteState extends State<PageBillete> {
                           title: snapshot.data![index]['categoria'] ?? "--",
                           fnt: () {
                             final provider = Provider.of<AppProvider>(context, listen: false);
-                            provider.setIdCategoria(snapshot.data![index]['id']!);
-                            provider.setNombreCategoria(snapshot.data![index]['categoria']!);
+                            provider.updateIdCategory(snapshot.data![index]['id']!);
+                            provider.updateNameCategory(snapshot.data![index]['categoria']!);
                             Navigator.pushNamed(context, '/billete_lista');
                           },
                         );

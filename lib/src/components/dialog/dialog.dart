@@ -94,4 +94,19 @@ class CustomDialog {
       },
     );
   }
+
+  static Future content({
+    required BuildContext context,
+    required Widget contenido,
+  }) {
+    return showDialog(
+      barrierDismissible: true,
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: contenido,
+        );
+      },
+    );
+  }
 }

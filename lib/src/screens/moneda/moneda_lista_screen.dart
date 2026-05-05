@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:provider/provider.dart';
 import 'package:mi_primera_numismatica/src/components/components.dart';
 import 'package:mi_primera_numismatica/src/model/model.dart';
@@ -28,7 +29,14 @@ class _MonedaScreenState extends State<MonedaScreen> {
         }
       },
       child: Scaffold(
-        appBar: CustomAppbar(title: 'Monedas - $nombreCategoria'),
+        appBar: CustomAppbar(
+          title: 'Monedas - $nombreCategoria',
+          actions: Row(
+            children: [
+              listaMonedas.isNotEmpty ? IconButton(onPressed: () => fntShowSummary(context), icon: const Icon(Icons.info)) : Container(),
+            ],
+          ),
+        ),
         body: Stack(
           children: [
             Container(
@@ -89,6 +97,10 @@ class _MonedaScreenState extends State<MonedaScreen> {
         ),
       ),
     );
+  }
+
+  Future fntShowSummary(BuildContext context) async {
+    CustomDialog.content(context: context, contenido: const SummaryMonedaWidget());
   }
 
   Future fntDeleteMoneda(String idMoneda) async {

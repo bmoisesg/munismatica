@@ -8,8 +8,26 @@ class AppProvider extends ChangeNotifier {
   bool isLoading = false;
   String _nombreCategoria = "";
   String _idCategoria = "";
+
   String get nombreCategoria => _nombreCategoria;
   String get idCategoria => _idCategoria;
+  MonedaModel get listaMonedaFirst => listaMonedas.first;
+  MonedaModel get listaMonedaLast => listaMonedas.last;
+
+  Map<int, List<MonedaModel>> get summaryMonedas {
+    if (listaMonedas.isEmpty) return {};
+    final mapa = <int, List<MonedaModel>>{};
+    final anios = listaMonedas.map((e) => int.parse(e.anio));
+    final min = anios.reduce((a, b) => a < b ? a : b);
+    final max = anios.reduce((a, b) => a > b ? a : b);
+    for (int i = min; i <= max; i++) {
+      mapa[i] = [];
+    }
+    for (var item in listaMonedas) {
+      mapa[int.parse(item.anio)]!.add(item);
+    }
+    return mapa;
+  }
 
   Future getDataCategoriasMoneda() async {
     isLoading = true;

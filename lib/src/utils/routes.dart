@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mi_primera_numismatica/src/screens/billete/billete_agregar.dart';
-import 'package:mi_primera_numismatica/src/screens/billete/billete.dart';
-import 'package:mi_primera_numismatica/src/screens/billete/billete_lista.dart';
 import 'package:mi_primera_numismatica/src/screens/home.dart';
-import 'package:mi_primera_numismatica/src/screens/moneda/moneda_agregar.dart';
-import 'package:mi_primera_numismatica/src/screens/moneda/moneda_lista.dart';
-import 'package:mi_primera_numismatica/src/screens/moneda/moneda_categoria.dart';
+import 'package:mi_primera_numismatica/src/screens/screens.dart';
 
 class AppRoutes {
   static Route<dynamic> generateRoute(RouteSettings url) {

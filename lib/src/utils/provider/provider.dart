@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mi_primera_numismatica/src/model/categoria_model.dart';
-import 'package:mi_primera_numismatica/src/model/moneda_model.dart';
+import 'package:mi_primera_numismatica/src/model/model.dart';
 import 'package:mi_primera_numismatica/src/utils/services/moneda_service.dart';
 
 class AppProvider extends ChangeNotifier {

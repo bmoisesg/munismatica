@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mi_primera_numismatica/src/components/appbar.dart';
-import 'package:mi_primera_numismatica/src/components/button.dart';
-import 'package:mi_primera_numismatica/src/components/dialog/dialog.dart';
-import 'package:mi_primera_numismatica/src/model/moneda_model.dart';
+import 'package:provider/provider.dart';
+import 'package:mi_primera_numismatica/src/components/components.dart';
+import 'package:mi_primera_numismatica/src/model/model.dart';
 import 'package:mi_primera_numismatica/src/utils/provider/provider.dart';
 import 'package:mi_primera_numismatica/src/utils/services/moneda_service.dart';
-import 'package:provider/provider.dart';
 
 class MonedaScreen extends StatefulWidget {
   const MonedaScreen({super.key});

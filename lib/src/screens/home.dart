@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mi_primera_numismatica/src/components/button.dart';
-import 'package:mi_primera_numismatica/src/components/dialog/dialog.dart';
+import 'package:mi_primera_numismatica/src/components/components.dart';
 import 'package:mi_primera_numismatica/src/utils/provider/provider.dart';
 import 'package:provider/provider.dart';
 

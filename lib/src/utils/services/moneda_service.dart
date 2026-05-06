@@ -19,7 +19,7 @@ class MonedaService {
     return data.entries.map((e) => MonedaModel.fromMap(e.value, e.key)).toList();
   }
 
-  Future setCategoriaMoneda(String categoria) async {
+  Future<bool> setCategoriaMoneda(String categoria) async {
     try {
       DatabaseReference ref = FirebaseDatabase.instance.ref();
       var data = {"categoria": categoria};
@@ -30,7 +30,17 @@ class MonedaService {
     }
   }
 
-  Future setMoneda(String anio, String idCategoria) async {
+  Future<bool> deleteCategoriaMoneda(String idCategoria) async {
+    try {
+      DatabaseReference ref = FirebaseDatabase.instance.ref();
+      await ref.child('moneda/$idCategoria').remove();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> setMoneda(String anio, String idCategoria) async {
     try {
       DateTime now = DateTime.now();
       var fechaIngreso = DateFormat('yyyy-MM-dd HH:mm:ss').format(now);

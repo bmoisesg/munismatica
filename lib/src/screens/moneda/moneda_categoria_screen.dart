@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mi_primera_numismatica/src/components/agregar_moneda_categoria_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:mi_primera_numismatica/src/components/components.dart';
 import 'package:mi_primera_numismatica/src/model/model.dart';
@@ -22,7 +23,7 @@ class _CategoriaMonedaScreenState extends State<CategoriaMonedaScreen> {
     return Scaffold(
       appBar: const CustomAppbar(title: 'Monedas Categorias'),
       floatingActionButton: FloatingActionButton(
-        onPressed: fntAgregarCategoria,
+        onPressed: () => fntAgregarCategoria(context),
         child: const Icon(Icons.add),
       ),
       body: Stack(
@@ -34,14 +35,32 @@ class _CategoriaMonedaScreenState extends State<CategoriaMonedaScreen> {
               itemCount: listaCategorias.length,
               itemBuilder: (context, index) {
                 final CategoriaModel categoria = listaCategorias[index];
-                return CustomButton(
-                  title: 'Categoria: ${categoria.titulo}',
-                  fnt: () {
-                    provider.updateIdCategory(categoria.id);
-                    provider.updateNameCategory(categoria.titulo);
-                    provider.getDataMonedasByIdCategory(categoria.id);
-                    Navigator.pushNamed(context, '/moneda_lista');
-                  },
+
+                return Stack(
+                  children: [
+                    CustomButton(
+                      title: 'Categoria: ${categoria.titulo}',
+                      fnt: () {
+                        provider.updateIdCategory(categoria.id);
+                        provider.updateNameCategory(categoria.titulo);
+                        provider.getDataMonedasByIdCategory(categoria.id);
+                        Navigator.pushNamed(context, '/moneda_lista');
+                      },
+                    ),
+                    Positioned(
+                      right: 0,
+                      top: 0,
+                      child: SizedBox(
+                        width: 30,
+                        height: 30,
+                        child: IconButton(
+                          icon: const Icon(Icons.delete_outline, color: Color.fromARGB(255, 213, 212, 212)),
+                          padding: EdgeInsets.zero,
+                          onPressed: () => fntDeleteCategoria(categoria.id),
+                        ),
+                      ),
+                    )
+                  ],
                 );
               },
             ),
@@ -52,53 +71,28 @@ class _CategoriaMonedaScreenState extends State<CategoriaMonedaScreen> {
     );
   }
 
-  fntAgregarCategoria() async {
-    TextEditingController ctrl = TextEditingController();
-    showDialog(
+  Future fntDeleteCategoria(String idCategoria) async {
+    final provider = Provider.of<AppProvider>(context, listen: false);
+    final getDataCategoriasMoneda = provider.getDataCategoriasMoneda;
+
+    CustomDialog.yesOrNot(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Agregar categoria"),
-          actions: [
-            TextButton(
-              onPressed: () async {
-                Navigator.pop(context);
-              },
-              child: const Text('Cancelar'),
-            ),
-            TextButton(
-              onPressed: () async {
-                if (ctrl.text == "") return;
-                final response = await MonedaService().setCategoriaMoneda(ctrl.text);
-                if (response) {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Categoria agregada!')));
-                  Navigator.pop(context);
-                  setState(() {});
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Error para agregar categoria')));
-                }
-              },
-              child: const Text('OK'),
-            ),
-          ],
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                keyboardType: TextInputType.text,
-                controller: ctrl,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "Nombre",
-                  fillColor: Colors.transparent,
-                  filled: true,
-                  isDense: true,
-                ),
-              )
-            ],
-          ),
-        );
+      content: '¿Deseas eliminar esta categoria?',
+      fntOk: () async {
+        final bool result = await MonedaService().deleteCategoriaMoneda(idCategoria);
+        if (result) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Eliminado con exito')));
+          getDataCategoriasMoneda();
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Error para eliminar ')));
+        }
+        Navigator.pop(context);
       },
+      fntCancel: () => Navigator.pop(context),
     );
+  }
+
+  Future fntAgregarCategoria(context) async {
+    CustomDialog.content(context: context, contenido: const AgregarMonedaCategoriaWidget());
   }
 }

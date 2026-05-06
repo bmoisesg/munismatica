@@ -18,8 +18,6 @@ class AppRoutes {
         return MaterialPageRoute(builder: (_) => const PageBilleteLista());
       case '/billete_agregar':
         return MaterialPageRoute(builder: (_) => const PageBilleteAgregar());
-      case '/moneda_agregar':
-        return MaterialPageRoute(builder: (_) => const PageMonedaAgregar());
       default:
         return MaterialPageRoute(builder: (_) => Container());
     }

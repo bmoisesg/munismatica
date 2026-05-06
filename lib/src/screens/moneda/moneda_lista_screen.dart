@@ -90,10 +90,8 @@ class _MonedaScreenState extends State<MonedaScreen> {
           ],
         ),
         floatingActionButton: FloatingActionButton(
+          onPressed: fntAddMoneda,
           child: const Icon(Icons.add),
-          onPressed: () async {
-            Navigator.pushNamed(context, '/moneda_agregar');
-          },
         ),
       ),
     );
@@ -101,6 +99,10 @@ class _MonedaScreenState extends State<MonedaScreen> {
 
   Future fntShowSummary(BuildContext context) async {
     CustomDialog.content(context: context, contenido: const SummaryMonedaWidget());
+  }
+
+  Future fntAddMoneda() async {
+    CustomDialog.content(context: context, contenido: const AgregarMonedaWidge());
   }
 
   Future fntDeleteMoneda(String idMoneda) async {

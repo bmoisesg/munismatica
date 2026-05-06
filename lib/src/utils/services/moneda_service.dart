@@ -46,7 +46,7 @@ class MonedaService {
     }
   }
 
-  Future deleteMoneda(String idCategoria, String idMoneda) async {
+  Future<bool> deleteMoneda(String idCategoria, String idMoneda) async {
     try {
       DatabaseReference ref = FirebaseDatabase.instance.ref();
       await ref.child('moneda/$idCategoria/elementos/$idMoneda').remove();

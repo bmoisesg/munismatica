@@ -106,14 +106,16 @@ class _MonedaScreenState extends State<MonedaScreen> {
   Future fntDeleteMoneda(String idMoneda) async {
     final provider = Provider.of<AppProvider>(context, listen: false);
     final String idCategoriaSelected = provider.idCategoria;
+    final getDataMonedasByIdCategory = provider.getDataMonedasByIdCategory;
 
     CustomDialog.yesOrNot(
       context: context,
       content: '¿Deseas eliminar esta moneda?',
       fntOk: () async {
-        final result = await MonedaService().deleteMoneda(idCategoriaSelected, idMoneda);
+        final bool result = await MonedaService().deleteMoneda(idCategoriaSelected, idMoneda);
         if (result) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Eliminado con exito')));
+          getDataMonedasByIdCategory(idCategoriaSelected);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Error para eliminar ')));
         }
